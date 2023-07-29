@@ -4,7 +4,7 @@ import { object, string } from 'yup';
 import { Container, Card, CardContent, Checkbox, FormControlLabel, Typography, Grid, Autocomplete, TextField } from '@mui/material';
 import { TextField as MaterialFormikTextField } from 'formik-material-ui';
 import { FormStepper } from '../form-stepper/form-stepper';
-import { FetchAllPokemon, FetchAllPokemonTypes } from '../../pokeapi/pokeapi';
+import { FetchAllPokemon, FetchAllPokemonTypes, FetchByType } from '../../pokeapi/pokeapi';
 
 const steps = ['Details', 'Pokemon Selection', 'Review'];
 const validationSchema = [
@@ -46,7 +46,6 @@ const App = () => {
       setIsLoadingPokemonsTypes(true);
       const pokemonTypes = await FetchAllPokemonTypes();
       const pokemonTypesNames = pokemonTypes.results.reduce((acc, curr) => { const name = curr.name[0].toUpperCase() + curr.name.slice(1); acc[name] = { name, checked: false }; return acc; }, {});
-      console.log(pokemonTypesNames);
 
       setAllPokemonTypesNames(pokemonTypesNames);
       setIsLoadingPokemonsTypes(false);
@@ -62,8 +61,34 @@ const App = () => {
     return validationSchema[currentStep];
   }, [currentStep]);
   
-  const handleTypeCheckboxChanged = (_) => {
+  const handleTypeCheckboxChanged = (event) => {
+    const name = event.target.name;
+    const newPokemonTypesNames = { ...allPokemonTypesNames, [name]: { ...allPokemonTypesNames[name], checked: !allPokemonTypesNames[name].checked }};
+    setAllPokemonTypesNames(newPokemonTypesNames);
 
+    const fetchSelectedPokemonTypes = async () => {
+      setIsLoadingPokemons(true);
+      const types = await Promise.all(Object.values(newPokemonTypesNames).filter((type) => type.checked === true).map(type => {
+        return FetchByType(type.name);
+      })).then((results) => {
+        const pokemonResults = results.map((typeArray) => typeArray.pokemon.map((pokemonArray) => pokemonArray.pokemon));
+        return pokemonResults[0].filter((pokemon) => {
+          return pokemonResults.every((pokemonArray) => {
+            return !!pokemonArray.find((currPokemon) => currPokemon.name === pokemon.name);
+          });
+        });
+      });
+
+      setCurrentlyListedPokemonNames(types.map((option) => option.name[0].toUpperCase() + option.name.slice(1)));
+      setIsLoadingPokemons(false);
+    }
+
+    if (Object.values(newPokemonTypesNames).filter((type) => type.checked === true).length > 0) {
+      fetchSelectedPokemonTypes();
+    }
+    else {
+      return setCurrentlyListedPokemonNames(allPokemonNames);
+    }
   }
 
   return (
@@ -148,7 +173,7 @@ const App = () => {
                     {
                       Object.values(allPokemonTypesNames).map((type) => {
                         return (
-                          <FormControlLabel control={<Checkbox />} label={type.name} onChange={handleTypeCheckboxChanged}/>
+                          <FormControlLabel key={type.name} checked={type.checked} name={type.name} control={<Checkbox />} label={type.name} onChange={handleTypeCheckboxChanged}/>
                         );
                       })
                     }
