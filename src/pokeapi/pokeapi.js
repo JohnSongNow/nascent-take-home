@@ -18,4 +18,3 @@ export const FetchByType = async (type) => {
       return response.json();
     });
 }
-

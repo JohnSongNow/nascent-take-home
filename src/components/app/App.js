@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Field } from 'formik';
 import { object, string } from 'yup';
-import { Container, Card, CardContent, Checkbox, FormControlLabel, Typography, Grid, Autocomplete, TextField } from '@mui/material';
+import { Container, Card, CardContent, Checkbox, FormControlLabel, Typography, Grid, Autocomplete, TextField, CircularProgress } from '@mui/material';
 import { TextField as MaterialFormikTextField } from 'formik-material-ui';
 import { FormStepper } from '../form-stepper/form-stepper';
 import { FetchAllPokemon, FetchAllPokemonTypes, FetchByType } from '../../pokeapi/pokeapi';
@@ -11,7 +11,7 @@ const validationSchema = [
   object({
     firstName: string().required('First Name is required'),
     lastName: string().required('Last Name is required'),
-    phoneNumber: string().matches(/^[0-9]\d{0}$/, {message: "Please enter valid number. 10 numbers for this test", excludeEmptyString: false}).required('Phone Number is required'),
+    phoneNumber: string().matches(/^[0-9]\d{9}$/, { message: 'Please enter valid number. 10 numbers for this test', excludeEmptyString: false }).required('Phone Number is required'),
     address: string().required('Address is required')
   }),
   object({
@@ -41,7 +41,7 @@ const App = () => {
       setIsLoadingPokemons(false);
     }
     fetchPokemon();
-    
+
     const fetchPokemonTypes = async () => {
       setIsLoadingPokemonsTypes(true);
       const pokemonTypes = await FetchAllPokemonTypes();
@@ -60,10 +60,10 @@ const App = () => {
   const currentValidationSchema = React.useMemo(() => {
     return validationSchema[currentStep];
   }, [currentStep]);
-  
+
   const handleTypeCheckboxChanged = (event) => {
     const name = event.target.name;
-    const newPokemonTypesNames = { ...allPokemonTypesNames, [name]: { ...allPokemonTypesNames[name], checked: !allPokemonTypesNames[name].checked }};
+    const newPokemonTypesNames = { ...allPokemonTypesNames, [name]: { ...allPokemonTypesNames[name], checked: !allPokemonTypesNames[name].checked } };
     setAllPokemonTypesNames(newPokemonTypesNames);
 
     const fetchSelectedPokemonTypes = async () => {
@@ -99,7 +99,7 @@ const App = () => {
       <Card sx={{ marginTop: 2 }}>
         <CardContent sx={{ paddingY: 10, paddingX: 5 }}>
           <Formik
-            initialValues={{
+            initialValues={ localStorage.getItem('formData') !== null ? JSON.parse(localStorage.getItem('formData')) : {
               firstName: '',
               lastName: '',
               phoneNumber: '',
@@ -107,8 +107,10 @@ const App = () => {
               favouritePokemonName: ''
             }}
             onSubmit={async (values, _) => {
+              console.log(JSON.stringify(values, null, 2));
+              localStorage.setItem('formData', JSON.stringify(values, null, 2));
               if (currentStep === steps.length - 1) {
-                alert(`Thanks for using the application here's the JSON of the data needed \n ${JSON.stringify(values, null, 2)}`);
+                alert(`Thanks for using the application here's the JSON of the data needed \n ${ JSON.stringify(values, null, 2) }`);
               }
               else {
                 setCurrentStep(currentStep + 1);
@@ -121,12 +123,10 @@ const App = () => {
                 steps={steps}
                 currentStep={currentStep}
                 setStep={setStep}
-                validateOnChange={false}
-                validateOnBlur={false}
               >
                 <Grid container spacing={2}>
                   <Grid container item md={12}>
-                    <Typography variant="h5" gutterBottom> Details </Typography>
+                    <Typography variant='h5' gutterBottom> Details </Typography>
                   </Grid>
                   <Grid item md={6}>
                     <Field fullWidth name='firstName' component={MaterialFormikTextField} label='First Name' />
@@ -136,52 +136,59 @@ const App = () => {
                   </Grid>
                   <Grid item md={6}>
                     <Field fullWidth name='phoneNumber' component={MaterialFormikTextField} label='Phone Number' />
-                  </Grid>         
+                  </Grid>
                   <Grid item md={6}>
                     <Field fullWidth name='address' component={MaterialFormikTextField} label='Address' />
                   </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                   <Grid container item md={12}>
-                    <Typography variant="h4" gutterBottom> Pokemon Selector </Typography>
+                    <Typography variant='h4' gutterBottom> Pokemon Selector </Typography>
                   </Grid>
                   <Grid item md={6}>
+                    {
+                      console.log(values)
+                    }
                     <Field
-                      name="favouritePokemonName"
+                      loading={isLoadingPokemons}
+                      name='favouritePokemonName'
                       component={Autocomplete}
                       options={currentlyListedPokemonNames}
                       getOptionLabel={(option) => option}
                       value={values.favouritePokemonName}
                       style={{ width: 300 }}
                       onChange={(_e, value) => {
-                          setFieldValue("favouritePokemonName", value);
+                        console.log(value);
+                        setFieldValue('favouritePokemonName', value);
                       }}
                       isOptionEqualToValue={(option, value) => option.value === value.value}
                       renderInput={(params) => (
-                        <TextField 
+                        <TextField
                           {...params}
                           error={touched.favouritePokemonName && errors.favouritePokemonName}
                           helperText={touched.favouritePokemonName && errors.favouritePokemonName}
-                          name="favouritePokemonName"
-                          label="Favourite Pokemon"
-                          variant="outlined"
+                          name='favouritePokemonName'
+                          label='Favourite Pokemon'
+                          variant='outlined'
                         />
                       )}
                     />
                   </Grid>
                   <Grid container item md={6}>
                     {
-                      Object.values(allPokemonTypesNames).map((type) => {
-                        return (
-                          <FormControlLabel key={type.name} checked={type.checked} name={type.name} control={<Checkbox />} label={type.name} onChange={handleTypeCheckboxChanged}/>
-                        );
-                      })
+                      isLoadingPokemonsTypes ?
+                        <CircularProgress /> :
+                        Object.values(allPokemonTypesNames).map((type) => {
+                          return (
+                            <FormControlLabel key={type.name} checked={type.checked} name={type.name} control={<Checkbox />} label={type.name} onChange={handleTypeCheckboxChanged} />
+                          );
+                        })
                     }
                   </Grid>
                 </Grid>
                 <Grid container justifyContent='center'>
                   <Grid container>
-                    <Typography variant="h4" gutterBottom> Summary </Typography>
+                    <Typography variant='h4' gutterBottom> Summary </Typography>
                   </Grid>
                   <Grid container justifyContent='center' alignItems='center' direction='row'>
                     <Grid item md={6}>
@@ -189,7 +196,7 @@ const App = () => {
                     </Grid>
                     <Grid item md={6}>
                       <Typography gutterBottom>Your Address: {`${values.address}`}</Typography>
-                    </Grid> 
+                    </Grid>
                     <Grid item md={6}>
                       <Typography gutterBottom>Your Phone Number: {`${values.phoneNumber}`}</Typography>
                     </Grid>

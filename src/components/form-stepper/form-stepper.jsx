@@ -10,13 +10,13 @@ export const FormStepper = ({ children, steps, currentStep, setStep }) => {
   return (
     <Form>
       <Stepper alternativeLabel activeStep={currentStep} sx={{ marginBottom: 5 }}>
-        { steps.map((stepLabel, index) => (
+        {steps.map((stepLabel, index) => (
           <Step key={stepLabel + index} completed={currentStep > index}>
             <StepLabel>{stepLabel}</StepLabel>
           </Step>
         ))}
       </Stepper>
-      { currentChild }
+      {currentChild}
       <Stack direction='row' spacing={2} sx={{ marginTop: 5 }}>
         {
           currentStep > 0 && (
@@ -38,11 +38,14 @@ export const FormStepper = ({ children, steps, currentStep, setStep }) => {
             </Button>
           )
         }
-        { currentStep === totalSteps - 1 && (
+        {currentStep === totalSteps - 1 && (
           <Button variant='contained' type='submit'>
             Submit
           </Button>
         )}
+        <Button variant='contained' onClick={() => { localStorage.clear(); }}>
+          Clears Local Storage (Does not reset form incase you wanted to test something)
+        </Button>
       </Stack>
     </Form>
   );
