@@ -21,7 +21,7 @@ const validationSchema = [
 ];
 
 const App = () => {
-  const [currentStep, setCurrentStep] = React.useState(1);
+  const [currentStep, setCurrentStep] = React.useState(0);
 
   const [isLoadingPokemons, setIsLoadingPokemons] = React.useState(true);
   const [allPokemonNames, setAllPokemonNames] = React.useState([]);
