@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+# React Multi-Step Form with Formik, Material UI, and Pokemon API
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This GitHub repository contains a multi-step form built using React, Formik, and Material UI. The form allows users to input data across multiple steps and utilizes the Pokemon API to search for Pokemon based on their types and names. Additionally, the form data is stored in the browser's local storage, allowing users to resume their progress even if they close or refresh the page.
 
-## Available Scripts
+## Table of Contents
+- [Demo](#demo)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Local Storage](#local-storage)
+- [Pokemon API Integration](#pokemon-api-integration)
+- [Contributing](#contributing)
+- [License](#license)
 
-In the project directory, you can run:
+## Demo
 
-### `npm start`
+Before diving into the details, check out the live demo of the multi-step form [here](http://johnsongnow.github.io/nascent-take-home).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Multi-step form with an intuitive user interface.
+- Utilizes Formik for form management and validation.
+- Styling done using Material UI components for a polished look.
+- Integration with the Pokemon API to search for Pokemon by types and names.
+- Local storage support to save form data and resume progress.
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+Before running the project, make sure you have the following installed:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js (at least version 12)
+- npm or yarn (npm is installed along with Node.js)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone this repository to your local machine using:
 
-### `npm run eject`
+   ```bash
+   git clone https://github.com/johnsongnow/nascent-take-home.git
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Navigate to the project directory:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   cd nascent-take-home
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Install the required dependencies:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+## Usage
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To start the development server and view the multi-step form, run the following command:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm start
+```
 
-### Code Splitting
+The development server will be accessible at `http://localhost:3000`, and the multi-step form can be accessed through the browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Local Storage
 
-### Analyzing the Bundle Size
+The form data is automatically saved to the browser's local storage after each step. If the user navigates away from the page or refreshes it, their progress will be saved. When the user revisits the form, their data will be pre-filled, allowing them to continue from where they left off.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+There is a button available that resets the local storage. Note that this does **NOT** clear the form.
 
-### Making a Progressive Web App
+## Pokemon API Integration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The form has an integrated feature that allows users to search for Pokemon based on their types and names. This is achieved by making API requests to the Pokemon API (https://pokeapi.co/) and displaying the results in real-time.
 
-### Advanced Configuration
+You can use the checkboxes to the right to filter by all types that are currently checked, and search inside the dropdown to a specified pokemon.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contributing
 
-### Deployment
+Contributions are welcome! If you find any issues or want to add new features, please submit a pull request. Before making significant changes, it's best to open an issue to discuss the proposed changes.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+Thank you for checking out our React multi-step form with Formik, Material UI, and Pokemon API integration. If you have any questions or feedback, feel free to contact us or open an issue in the repository. Happy coding!
